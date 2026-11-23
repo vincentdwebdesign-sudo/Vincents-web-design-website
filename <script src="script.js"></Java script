@@ -1,0 +1,75 @@
+
+// Vincent's Web Design — website interactions
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Mobile navigation
+  const menuButton = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".nav");
+
+  if (menuButton && nav) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = nav.classList.toggle("open");
+
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+      menuButton.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation" : "Open navigation"
+      );
+    });
+
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Open navigation");
+      });
+    });
+  }
+
+  // Automatically update copyright year
+  const yearElement = document.getElementById("year");
+
+  if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+  }
+
+  // Contact form
+  const projectForm = document.getElementById("project-form");
+
+  if (projectForm) {
+    projectForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(projectForm);
+
+      const name = String(formData.get("name") || "").trim();
+      const business = String(formData.get("business") || "").trim();
+      const service = String(formData.get("service") || "").trim();
+      const message = String(formData.get("message") || "").trim();
+
+      const subject = encodeURIComponent(`Website inquiry — ${name}`);
+
+      const body = encodeURIComponent(
+        `Hi Vince,
+
+My name: ${name}
+Business / project: ${business || "Not provided"}
+What I need: ${service || "Not specified"}
+
+About my idea:
+${message || "I would like to discuss a project."}
+
+Thank you!`
+      );
+
+      const status = document.querySelector(".form-status");
+
+      if (status) {
+        status.textContent = "Opening your email app…";
+      }
+
+      window.location.href =
+        `mailto:vincentdwebdesign@gmail.com?subject=${subject}&body=${body}`;
+    });
+  }
+});
